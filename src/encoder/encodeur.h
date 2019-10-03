@@ -16,6 +16,10 @@ void encodeur(int noRobot, String action, float vitesseMoteur, float constPond, 
     {
         vitesseMoteurR = 0.94 * vitesseMoteur; //pour robot 3A
     }
+    if (noRobot == 1)
+    {
+        vitesseMoteurR = 0.98 * vitesseMoteur; //pour robot 3A
+    }
 
     while (distanceParcourue < distanceCM)
     {
