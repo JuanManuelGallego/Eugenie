@@ -12,7 +12,7 @@ void encodeur(int noRobot, String action, float vitesseMoteur, float constPond, 
     ENCODER_Reset(LEFT);
     ENCODER_Reset(RIGHT);
 
-    if (noRobot == 0)
+    if (noRobot == 0 && action != "tourner")
     {
         vitesseMoteurR = 0.94 * vitesseMoteur; //pour robot 3A
     }

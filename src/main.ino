@@ -7,8 +7,8 @@ Date: Derniere date de modification
 */
 
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
-#include <avancer/avancer.h>
-#include <tourner/tourner.h>
+#include <parcours/parcours.h>
+#include <infraRouge/lecteurInfraRouge.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -21,9 +21,10 @@ Fonctions d'initialisation (setup)
 #define robot3B 1
 #define vitesseAvancer 0.25
 #define vitesseTourner 0.25
-#define delais 500
+#define delais 200
 
-void robot(int noRobot){
+void parcourTest(int noRobot)
+{
   // Parcour planché
   Avancer(120.5, vitesseAvancer, noRobot);
   delay(delais);
@@ -31,7 +32,7 @@ void robot(int noRobot){
   tourner(LEFT, 90, vitesseTourner, noRobot); //1
   delay(delais);
 
-  Avancer(80, vitesseAvancer, noRobot);
+  Avancer(78, vitesseAvancer, noRobot);
   delay(delais);
 
   tourner(RIGHT, 90, vitesseTourner, noRobot); // 2
@@ -58,10 +59,64 @@ void robot(int noRobot){
   Avancer(125, vitesseAvancer, noRobot);
 }
 
+void defiParcourt(int noRobot)
+{
+  Avancer(50, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 87.568989, vitesseTourner, noRobot); //1
+  delay(delais);
+
+  Avancer(50, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 88, vitesseTourner, noRobot); //2
+  delay(delais);
+
+  Avancer(45, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 88, vitesseTourner, noRobot); //3
+  delay(delais);
+
+  Avancer(55, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 88, vitesseTourner, noRobot); //4
+  delay(delais);
+
+  Avancer(100, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 91, vitesseTourner, noRobot); //5
+  delay(delais);
+
+  Avancer(46, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 88.5, vitesseTourner, noRobot); //6
+  delay(delais);
+
+  Avancer(125, vitesseAvancer, noRobot);
+  delay(delais);
+}
+
+void choixRobot(int noRobot)
+{
+  if (noRobot == robot3A)
+    defiParcoursA(robot3A, vitesseAvancer, vitesseTourner, delais); //RobotA
+  // else
+  //   defiParcoursB(robot3B, vitesseAvancer, vitesseTourner, delais); //RobotB
+}
+
 void setup()
 {
   BoardInit();
-  robot(robot3A);
+  Serial.begin(200);
+
+  //Activer les fonctions quand le bunper arrière est cliqué.
+  // if(ROBUS_IsBumper(3))
+  //   choixRobot(robot3B);
 }
 
 /* ****************************************************************************
@@ -71,5 +126,6 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
+  infrarouge1();
   delay(10);
 }
