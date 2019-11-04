@@ -21,7 +21,9 @@ void encodeur(int noRobot, String action, float vitesseMoteur, float constPond, 
         vitesseMoteurR = 0.98 * vitesseMoteur; //pour robot 3A
     }
 
-    while (distanceParcourue < distanceCM)
+
+
+    while (distanceParcourue < (distanceCM > 0 ? distanceCM : distanceCM * -1))
     {
         if (action == "tourner" && direction >= 0)
         {
@@ -43,8 +45,8 @@ void encodeur(int noRobot, String action, float vitesseMoteur, float constPond, 
         }
         else
         {
-            encodeurGauche = ENCODER_Read(LEFT);
-            encodeurDroit = ENCODER_Read(RIGHT);
+            encodeurGauche = distanceCM > 0 ? ENCODER_Read(LEFT) : ENCODER_Read(LEFT) * -1;
+            encodeurDroit = distanceCM > 0 ? ENCODER_Read(RIGHT) : ENCODER_Read(RIGHT) * -1;
 
             MOTOR_SetSpeed(LEFT, vitesseMoteurL);
             MOTOR_SetSpeed(RIGHT, vitesseMoteurR);

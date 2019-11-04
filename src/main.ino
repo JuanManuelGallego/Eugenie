@@ -9,6 +9,10 @@ Date: Derniere date de modification
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <parcours/parcours.h>
 #include <infraRouge/lecteurInfraRouge.h>
+#include <colorSensor/colorSensor.h>
+#include <suiveurLigne/suiveurLignes.h>
+// #include <Adafruit_TCS34725.h>
+#include <parcourCombattant/parcoursCombattant.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -22,6 +26,24 @@ Fonctions d'initialisation (setup)
 #define vitesseAvancer 0.25
 #define vitesseTourner 0.25
 #define delais 200
+
+#define green 1
+#define red 2
+#define blue 3
+#define yellow 4
+
+// Pick analog outputs, for the UNO these three work well
+// use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
+#define redpin 3
+#define greenpin 5
+#define bluepin 6
+// for a common anode LED, connect the common pin to +5V
+// for common cathode, connect the common to ground
+
+// our RGB -> eye-recognized gamma color
+byte gammatable[256];
+
+// Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
 void parcourTest(int noRobot)
 {
@@ -112,7 +134,12 @@ void choixRobot(int noRobot)
 void setup()
 {
   BoardInit();
-  Serial.begin(200);
+  // colorSensorSetup(redpin, greenpin, bluepin);
+  SERVO_Enable(0);
+  SERVO_SetAngle(0, 55);
+  Serial.begin(9600);
+  ENCODER_Reset(RIGHT);
+  ENCODER_Reset(LEFT);
 
   //Activer les fonctions quand le bunper arrière est cliqué.
   // if(ROBUS_IsBumper(3))
@@ -126,6 +153,10 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
-  infrarouge1();
-  delay(10);
+  // suiveurLigne(robot3A);
+  // colorSensor(redpin, greenpin, bluepin);
+  if (ROBUS_IsBumper(3))
+  {
+    parcoursCombattant(robot3A, blue);
+  }
 }
