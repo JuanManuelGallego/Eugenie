@@ -140,10 +140,6 @@ void setup()
   Serial.begin(9600);
   ENCODER_Reset(RIGHT);
   ENCODER_Reset(LEFT);
-
-  //Activer les fonctions quand le bunper arrière est cliqué.
-  // if(ROBUS_IsBumper(3))
-  //   choixRobot(robot3B);
 }
 
 /* ****************************************************************************
@@ -153,10 +149,12 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
-  // suiveurLigne(robot3A);
-  // colorSensor(redpin, greenpin, bluepin);
-  if (ROBUS_IsBumper(3))
+  if (ROBUS_IsBumper(2)) //avant
   {
-    parcoursCombattant(robot3A, blue);
+    parcoursCombattant(robot3A, green);
+  }
+  if (ROBUS_IsBumper(3)) // arriere
+  {
+    parcoursCombattant(robot3A, red);
   }
 }

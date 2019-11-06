@@ -1,10 +1,11 @@
 #include <Arduino.h>
-#include <Time.h>
+#define constPond 0.00001
 
 void prenderBalleEtReculer(int noRobot, int color)
 {
     int a = 1;
     int b = 1;
+    // bool c = false;
 
     while (a != 0)
     {
@@ -12,7 +13,7 @@ void prenderBalleEtReculer(int noRobot, int color)
         suiveurLigne(noRobot);
     }
     delay(500);
-    Avancer(-1.2, -0.25, noRobot); //Reculer
+    Avancer(-1.3, -0.20, noRobot); //Reculer
     delay(500);
     SERVO_SetAngle(0, 180);
     delay(1000);
@@ -25,17 +26,23 @@ void prenderBalleEtReculer(int noRobot, int color)
     tourner(LEFT, 45, 0.17, noRobot);
     delay(100);
 
-    // time_t t3 = time(NULL);
-    // time_t t4;
-
-    while (b != 0)
+    //si rouge
+    if (color == 2)
     {
-        // t4 = time(NULL);
-        b = suiveurLigneValue();
-        suiveurLigne(noRobot);
+        Avancer(85,0.20, noRobot);
     }
+    else
+    {
+        while (b != 0)
+        {
+            b = suiveurLigneValue();
+            suiveurLigne(noRobot);
+            // c = calculDistance(noRobot, "avancer", 0.15, constPond, 10);
+        }
+    }
+
     Serial.print("Sortis de la boucle");
-    delay(100);
+    delay(3000);
     SERVO_SetAngle(0, 90); //Remet le bras vers le haut
     delay(500);
 
@@ -73,11 +80,11 @@ void parcoursCombattant(int noRobot, int color)
     case 1:
         tourner(RIGHT, 90, 0.15, noRobot);
         delay(100);
-        Avancer(30, 0.25, noRobot);
+        Avancer(32, 0.25, noRobot);
         delay(100);
         tourner(LEFT, 90, 0.15, noRobot);
         delay(100);
-        Avancer(50, .25, noRobot);
+        Avancer(48, .25, noRobot);
         delay(100);
         tourner(RIGHT, 45, 0.15, noRobot);
         delay(100);
@@ -91,7 +98,7 @@ void parcoursCombattant(int noRobot, int color)
         delay(100);
         tourner(RIGHT, 90, 0.15, noRobot);
         delay(100);
-        Avancer(55, .25, noRobot);
+        Avancer(58, .25, noRobot);
         delay(100);
         tourner(LEFT, 45, 0.15, noRobot);
         delay(100);

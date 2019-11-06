@@ -19,23 +19,20 @@ void suiveurLigne(int noRobot)
     else if (v > 4.0) // TournerDroite
     {
         Serial.println("DROITE");
-        MOTOR_SetSpeed(LEFT, 0.3);
-        // tourner(RIGHT,0.1,0.15,noRobot);
+        MOTOR_SetSpeed(LEFT, 0.2);
     }
     else if (v > 3.0) // Tout droit
     {
         Serial.println("TOUT DROIT");
-        Avancer(5, 0.15, noRobot);
+        Avancer(2.5, 0.15, noRobot);
     }
     else if (v > 1) // Tourner Gauche
     {
         Serial.println("GAUCHE");
-        MOTOR_SetSpeed(RIGHT, 0.3);
-        //tourner(LEFT,0.1,0.15,noRobot);
+        MOTOR_SetSpeed(RIGHT, 0.2);
     }
     else
     {
         Serial.println("TOUT NOIR");
     }
-    // delay(200);
 }
