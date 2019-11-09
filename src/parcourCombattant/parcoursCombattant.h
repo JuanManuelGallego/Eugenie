@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #define constPond 0.00001
 
+#define robot3A 0
+#define robot3B 1
+
 void prenderBalleEtReculer(int noRobot, int color)
 {
     int a = 1;
@@ -29,7 +32,7 @@ void prenderBalleEtReculer(int noRobot, int color)
     //si rouge
     if (color == 2)
     {
-        Avancer(85,0.20, noRobot);
+        Avancer(85, 0.20, noRobot);
     }
     else
     {
@@ -74,58 +77,119 @@ void prenderBalleEtReculer(int noRobot, int color)
 
 void parcoursCombattant(int noRobot, int color)
 {
-
-    switch (color)
+    if (noRobot == robot3A)
     {
-    case 1:
-        tourner(RIGHT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(32, 0.25, noRobot);
-        delay(100);
-        tourner(LEFT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(48, .25, noRobot);
-        delay(100);
-        tourner(RIGHT, 45, 0.15, noRobot);
-        delay(100);
-        prenderBalleEtReculer(noRobot, color);
-        break;
+        switch (color)
+        {
+        case 1:
+            tourner(RIGHT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(32, 0.25, noRobot);
+            delay(100);
+            tourner(LEFT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(48, .25, noRobot);
+            delay(100);
+            tourner(RIGHT, 45, 0.15, noRobot);
+            delay(100);
+            prenderBalleEtReculer(noRobot, color);
+            break;
 
-    case 2:
-        tourner(LEFT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(30, .25, noRobot);
-        delay(100);
-        tourner(RIGHT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(58, .25, noRobot);
-        delay(100);
-        tourner(LEFT, 45, 0.15, noRobot);
-        delay(100);
-        prenderBalleEtReculer(noRobot, color);
-        break;
+        case 2:
+            tourner(LEFT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(30, .25, noRobot);
+            delay(100);
+            tourner(RIGHT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(58, .25, noRobot);
+            delay(100);
+            tourner(LEFT, 45, 0.15, noRobot);
+            delay(100);
+            prenderBalleEtReculer(noRobot, color);
+            break;
 
-    case 3:
-        tourner(RIGHT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(25, .25, noRobot);
-        delay(100);
-        tourner(RIGHT, 75, 0.15, noRobot);
-        delay(100);
-        prenderBalleEtReculer(noRobot, color);
-        break;
+        case 3:
+            tourner(RIGHT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(25, .25, noRobot);
+            delay(100);
+            tourner(RIGHT, 75, 0.15, noRobot);
+            delay(100);
+            prenderBalleEtReculer(noRobot, color);
+            break;
 
-    case 4:
-        tourner(LEFT, 90, 0.15, noRobot);
-        delay(100);
-        Avancer(25, .25, noRobot);
-        delay(100);
-        tourner(LEFT, 75, 0.2, noRobot);
-        delay(100);
-        prenderBalleEtReculer(noRobot, color);
-        break;
+        case 4:
+            tourner(LEFT, 90, 0.15, noRobot);
+            delay(100);
+            Avancer(25, .25, noRobot);
+            delay(100);
+            tourner(LEFT, 75, 0.2, noRobot);
+            delay(100);
+            prenderBalleEtReculer(noRobot, color);
+            break;
 
-    default:
-        break;
+        default:
+            break;
+        }
+    }
+    else if (noRobot == robot3B)
+    {
+        switch (color)
+        {
+        case 1:
+            tourner(LEFT, 90, 0.25, noRobot);
+            delay(500);
+            Avancer(55, 0.3, noRobot);
+            delay(500);
+            tourner(LEFT, 15, 0.15, noRobot);
+            delay(500);
+            Avancer(38, 0.3, noRobot);
+            delay(500);
+            break;
+
+        case 2:
+            tourner(RIGHT, 90, 0.25, noRobot);
+            delay(500);
+            Avancer(30, 0.3, noRobot);
+            delay(500);
+            tourner(RIGHT, 30, 0.18, noRobot);
+            delay(500);
+            Avancer(50, 0.3, noRobot);
+            delay(500);
+            break;
+
+        case 3:
+            tourner(LEFT, 90, 0.25, noRobot);
+            delay(500);
+            Avancer(45, 0.3, noRobot);
+            delay(500);
+            tourner(RIGHT, 90, 0.25, noRobot);
+            delay(500);
+            Avancer(105, 0.3, noRobot);
+            delay(500);
+            tourner(LEFT, 30, 0.15, noRobot);
+            delay(500);
+            Avancer(24, 0.3, noRobot);
+            break;
+
+        case 4:
+            tourner(RIGHT, 90, 0.23, noRobot);
+            delay(500);
+            Avancer(45, 0.3, noRobot);
+            delay(500);
+            tourner(LEFT, 90, 0.16, noRobot);
+            delay(500);
+            Avancer(110, 0.3, noRobot);
+            delay(500);
+            tourner(RIGHT, 30, 0.14, noRobot);
+            delay(500);
+            Avancer(20, 0.1, noRobot);
+            delay(500);
+            break;
+
+        default:
+            break;
+        }
     }
 }

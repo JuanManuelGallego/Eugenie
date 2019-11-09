@@ -150,5 +150,6 @@ void loop()
   if (ROBUS_IsBumper(3)) // arriere
   {
     parcoursCombattant(robot3A, yellow);
+    // parcoursCombattant(robot3B, red);
   }
 }
