@@ -149,12 +149,8 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
-  if (ROBUS_IsBumper(2)) //avant
-  {
-    parcoursCombattant(robot3A, green);
-  }
   if (ROBUS_IsBumper(3)) // arriere
   {
-    parcoursCombattant(robot3A, red);
+    parcoursCombattant(robot3A, yellow);
   }
 }
