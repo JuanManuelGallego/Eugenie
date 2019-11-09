@@ -7,8 +7,12 @@ Date: Derniere date de modification
 */
 
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
-#include<avancer/avancer.h>
-#include<tourner/tourner.h>
+#include <parcours/parcours.h>
+#include <infraRouge/lecteurInfraRouge.h>
+#include <colorSensor/colorSensor.h>
+#include <suiveurLigne/suiveurLignes.h>
+// #include <Adafruit_TCS34725.h>
+#include <parcourCombattant/parcoursCombattant.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -19,36 +23,121 @@ Fonctions d'initialisation (setup)
 
 #define robot3A 0
 #define robot3B 1
-#define vitesse 0.25
-#define delais 500
+#define vitesseAvancer 0.25
+#define vitesseTourner 0.25
+#define delais 200
+
+#define green 1
+#define red 2
+#define blue 3
+#define yellow 4
+
+// Pick analog outputs, for the UNO these three work well
+// use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
+#define redpin 3
+#define greenpin 5
+#define bluepin 6
+// for a common anode LED, connect the common pin to +5V
+// for common cathode, connect the common to ground
+
+// our RGB -> eye-recognized gamma color
+byte gammatable[256];
+
+// Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+
+void parcourTest(int noRobot)
+{
+  // Parcour planché
+  Avancer(120.5, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 90, vitesseTourner, noRobot); //1
+  Avancer(78, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 90, vitesseTourner, noRobot); // 2
+  delay(delais);
+
+  Avancer(103.5, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 30, vitesseTourner, noRobot); // 3
+  delay(delais);
+
+  Avancer(170, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 90, vitesseTourner, noRobot); // 4
+  delay(delais);
+
+  Avancer(45, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 30, vitesseTourner, noRobot); // 5
+  delay(delais);
+
+  Avancer(125, vitesseAvancer, noRobot);
+}
+
+void defiParcourt(int noRobot)
+{
+  Avancer(50, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 87.568989, vitesseTourner, noRobot); //1
+  delay(delais);
+
+  Avancer(50, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 88, vitesseTourner, noRobot); //2
+  delay(delais);
+
+  Avancer(45, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 88, vitesseTourner, noRobot); //3
+  delay(delais);
+
+  Avancer(55, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 88, vitesseTourner, noRobot); //4
+  delay(delais);
+
+  Avancer(100, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(RIGHT, 91, vitesseTourner, noRobot); //5
+  delay(delais);
+
+  Avancer(46, vitesseAvancer, noRobot);
+  delay(delais);
+
+  tourner(LEFT, 88.5, vitesseTourner, noRobot); //6
+  delay(delais);
+
+  Avancer(125, vitesseAvancer, noRobot);
+  delay(delais);
+}
+
+void choixRobot(int noRobot)
+{
+  if (noRobot == robot3A)
+    defiParcoursA(robot3A, vitesseAvancer, vitesseTourner, delais); //RobotA
+  // else
+  //   defiParcoursB(robot3B, vitesseAvancer, vitesseTourner, delais); //RobotB
+}
 
 void setup()
 {
   BoardInit();
-
+  // colorSensorSetup(redpin, greenpin, bluepin);
+  SERVO_Enable(0);
+  SERVO_SetAngle(0, 55);
   Serial.begin(9600);
-//Parcour planché
-  // Avancer(120.5, 0.25, robot3B);
-  // delay(500);
-  // tourner(0,90,0.25); //1
-  // delay(500);
-  // Avancer(85, 0.25, robot3B);
-  // delay(500);
-  // tourner(1,90,0.25); // 2
-  // delay(500);
-  // Avancer(103.5, 0.25, robot3B);
-  // delay(500);
-  // tourner(1,35,0.25); // 3
-  // delay(500);
-  // Avancer(170, 0.25, robot3B);
-  // delay(500);
-  // tourner(0,90,0.25); // 4
-  // delay(500);
-  // Avancer(50, 0.25, robot3B);
-  // delay(500);
-  // tourner(1,30,0.25); // 5
-  // delay(500);
-  // Avancer(110, 0.25, robot3B);
+  ENCODER_Reset(RIGHT);
+  ENCODER_Reset(LEFT);
 }
 
 /* ****************************************************************************
@@ -58,34 +147,8 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
-  int x = analogRead(A0);
-  float v = x * (5.0 / 1023.0);
-  Serial.println(v);  
-
-  if(v > 4.9) 
+  if (ROBUS_IsBumper(3)) // arriere
   {
-    Serial.println("TOUT BLANC"); 
-    //Avancer(5,0.15,robot3A);
-  } // ChercherLigne();
-  else if (v > 4.0) 
-  {
-     Serial.println("DROITE"); 
-    //tourner(RIGHT,0.1,0.25,robot3A);
-  }// TournerDroite
-  else if (v > 3.0) 
-  {
-    Serial.println("TOUT DROIT"); 
-    //Avancer(5,0.15,robot3A);
-  }// Tout droit
-  else if (v > 1)
-  {
-    Serial.println("GAUCHE"); 
-
-    //tourner(LEFT,0.1,0.25,robot3A);
-  } // Tourner Gauche
-  else 
-  {
-    Serial.println("TOUT NOIR"); 
+    parcoursCombattant(robot3A, yellow);
   }
-  delay(500);
 }
