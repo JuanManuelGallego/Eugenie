@@ -13,6 +13,7 @@ Date: Derniere date de modification
 #include <suiveurLigne/suiveurLignes.h>
 // #include <Adafruit_TCS34725.h>
 #include <parcourCombattant/parcoursCombattant.h>
+#include <flameSensor/flameSensor.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -147,9 +148,10 @@ Fonctions de boucle infini (loop())
 
 void loop()
 {
-  if (ROBUS_IsBumper(3)) // arriere
-  {
-    parcoursCombattant(robot3A, yellow);
-    // parcoursCombattant(robot3B, red);
-  }
+  // if (ROBUS_IsBumper(3)) // arriere
+  // {
+  //   parcoursCombattant(robot3A, yellow);
+  //   // parcoursCombattant(robot3B, red);
+  // }
+  detectFlame();
 }
