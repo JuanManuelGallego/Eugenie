@@ -1,13 +1,13 @@
-#include<LibRobus.h>
+#include <LibRobus.h>
+#include <Arduino.h>
 
-void infrarouge1()
+int InfraRougeValue()
 {
     int read = ROBUS_ReadIR(0);
-    printf("valeur: %d", read);
-    Serial.print(read);
-
-    if (read < 200)
+    Serial.println(read);
+    if ((read > 250 && read < 500))
     {
-        Avancer(10, 0.25, 1);
+        Serial.println("Bonne distance");
     }
+    return read;
 }

@@ -8,12 +8,12 @@ Date: Derniere date de modification
 
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <parcours/parcours.h>
-#include <infraRouge/lecteurInfraRouge.h>
 #include <colorSensor/colorSensor.h>
 #include <suiveurLigne/suiveurLignes.h>
 // #include <Adafruit_TCS34725.h>
 #include <parcourCombattant/parcoursCombattant.h>
-#include <flameSensor/flameSensor.h>
+#include <pompier/pompier.h>
+#include <suiveurLigne/suiveurLignesV2.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -31,7 +31,11 @@ Fonctions d'initialisation (setup)
 #define green 1
 #define red 2
 #define blue 3
-#define yellow 4
+#define yellow
+
+//LED
+#define led1 2
+#define led2 3
 
 // Pick analog outputs, for the UNO these three work well
 // use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
@@ -130,6 +134,13 @@ void choixRobot(int noRobot)
   //   defiParcoursB(robot3B, vitesseAvancer, vitesseTourner, delais); //RobotB
 }
 
+void setPinMode()
+{
+  pinMode(13, OUTPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+}
+
 void setup()
 {
   BoardInit();
@@ -139,6 +150,8 @@ void setup()
   Serial.begin(9600);
   ENCODER_Reset(RIGHT);
   ENCODER_Reset(LEFT);
+  setPinMode();
+  // digitalWrite(13, LOW); // sets the digital pin 13 off
 }
 
 /* ****************************************************************************
@@ -153,5 +166,13 @@ void loop()
   //   parcoursCombattant(robot3A, yellow);
   //   // parcoursCombattant(robot3B, red);
   // }
-  detectFlame();
+  // pompier(13);
+  // suiveurLigneV2();
+  // digitalWrite(13, HIGH); // sets the digital pin 13 on
+  // detectFlame();
+
+  while (true)
+  {
+    pompierFlame(13);
+  }
 }
