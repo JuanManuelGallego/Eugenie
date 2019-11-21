@@ -19,11 +19,7 @@ void eteindreLED()
 void LED(boolean action)
 {
     if (action)
-    {
         allumerLED();
-    }
     else
-    {
         eteindreLED();
-    }
 }

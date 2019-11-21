@@ -10,10 +10,8 @@ Date: Derniere date de modification
 #include <parcours/parcours.h>
 #include <colorSensor/colorSensor.h>
 #include <suiveurLigne/suiveurLignes.h>
-// #include <Adafruit_TCS34725.h>
 #include <parcourCombattant/parcoursCombattant.h>
 #include <pompier/pompier.h>
-#include <suiveurLigne/suiveurLignesV2.h>
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -37,18 +35,8 @@ Fonctions d'initialisation (setup)
 #define led1 2
 #define led2 3
 
-// Pick analog outputs, for the UNO these three work well
-// use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
-#define redpin 3
-#define greenpin 5
-#define bluepin 6
-// for a common anode LED, connect the common pin to +5V
-// for common cathode, connect the common to ground
-
-// our RGB -> eye-recognized gamma color
-byte gammatable[256];
-
-// Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
+//pompe
+#define pompePin 13
 
 void parcourTest(int noRobot)
 {
@@ -136,22 +124,27 @@ void choixRobot(int noRobot)
 
 void setPinMode()
 {
-  pinMode(13, OUTPUT);
+  pinMode(pompePin, OUTPUT);
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
+  pinMode(38, INPUT);
+  pinMode(40, INPUT);
+  pinMode(42, INPUT);
+  pinMode(44, INPUT);
+  pinMode(46, INPUT);
+  pinMode(48, INPUT);
+  pinMode(22, INPUT);
+  pinMode(33, INPUT);
 }
 
 void setup()
 {
   BoardInit();
-  // colorSensorSetup(redpin, greenpin, bluepin);
-  SERVO_Enable(0);
-  SERVO_SetAngle(0, 55);
+  setPinMode();
   Serial.begin(9600);
   ENCODER_Reset(RIGHT);
   ENCODER_Reset(LEFT);
-  setPinMode();
-  // digitalWrite(13, LOW); // sets the digital pin 13 off
+  // digitalWrite(pompePin, LOW); // sets the digital pin 13 off
 }
 
 /* ****************************************************************************
@@ -166,13 +159,13 @@ void loop()
   //   parcoursCombattant(robot3A, yellow);
   //   // parcoursCombattant(robot3B, red);
   // }
-  // pompier(13);
-  // suiveurLigneV2();
-  // digitalWrite(13, HIGH); // sets the digital pin 13 on
+  // pompier(pompePin);
+  suiveurLigneV2();
+  // digitalWrite(pompePin, HIGH); // sets the digital pin 13 on
   // detectFlame();
 
-  while (true)
-  {
-    pompierFlame(13);
-  }
+  // while (true)
+  // {
+  //   pompierFlame(pompePin);
+  // }
 }

@@ -1,15 +1,14 @@
 #include <Arduino.h>
 
-float analogReadValue()
+int analogReadValue(int IRID)
 {
-  int x = analogRead(A8);
-  float v = x / 1023.0;
-  return v;
+  int x = ROBUS_ReadIR(IRID);
+  return x / 560;
 }
 
-boolean detectFlame()
+boolean detectFlame(int IRID)
 {
-  int flame_detected = analogReadValue();
+  int flame_detected = analogReadValue(IRID);
   Serial.println(flame_detected);
 
   if (!flame_detected)

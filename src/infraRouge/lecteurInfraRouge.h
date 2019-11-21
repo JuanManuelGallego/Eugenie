@@ -3,7 +3,7 @@
 
 int InfraRougeValue()
 {
-    int read = ROBUS_ReadIR(0);
+    int read = ROBUS_ReadIR(3);
     Serial.println(read);
     if ((read > 250 && read < 500))
     {
