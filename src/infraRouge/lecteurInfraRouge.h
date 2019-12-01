@@ -4,10 +4,10 @@
 int InfraRougeValue()
 {
     int read = ROBUS_ReadIR(3);
-    Serial.println(read);
+    // Serial.println(read);
     if ((read > 250 && read < 500))
     {
-        Serial.println("Bonne distance");
+        // Serial.println("Bonne distance");
     }
     return read;
 }

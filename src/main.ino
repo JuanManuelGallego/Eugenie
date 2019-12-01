@@ -124,9 +124,14 @@ void choixRobot(int noRobot)
 
 void setPinMode()
 {
-  pinMode(pompePin, OUTPUT);
+  // pinMode(pompePin, OUTPUT);
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
+
+  //Gyrophare
+  pinMode(4, OUTPUT);
+
+  // Suiveur de lignes
   pinMode(38, INPUT);
   pinMode(40, INPUT);
   pinMode(42, INPUT);
@@ -144,7 +149,7 @@ void setup()
   Serial.begin(9600);
   ENCODER_Reset(RIGHT);
   ENCODER_Reset(LEFT);
-  // digitalWrite(pompePin, LOW); // sets the digital pin 13 off
+  digitalWrite(4, LOW);
 }
 
 /* ****************************************************************************
@@ -160,12 +165,15 @@ void loop()
   //   // parcoursCombattant(robot3B, red);
   // }
   // pompier(pompePin);
-  suiveurLigneV2();
+  // suiveurLigneV2();
   // digitalWrite(pompePin, HIGH); // sets the digital pin 13 on
-  // detectFlame();
+  // detectFlame(1);
+  // trouverFlame();
+  // digitalWrite(4, HIGH);
 
-  // while (true)
-  // {
-  //   pompierFlame(pompePin);
-  // }
+  while (true)
+  {
+    pompierFlame(pompePin, true, false);
+  }
+  // allumerLED();
 }
