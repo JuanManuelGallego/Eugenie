@@ -5,8 +5,8 @@ long startTimer = 0;
 bool timerLED(long maxTimer)
 {
     bool value = 0;
-
     startTimer++;
+    
     if (startTimer < maxTimer)
     {
         value = 0;
@@ -16,8 +16,9 @@ bool timerLED(long maxTimer)
         value = 1;
     }
     else
+    {
         startTimer = 0;
-
+    }
     return value;
 }
 

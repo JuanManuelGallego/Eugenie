@@ -1,17 +1,13 @@
 #include <Arduino.h>
 #include <LibRobus.h>
 
-bool last_Value;
-//////////////////////////////////////////////////////////
-// Pin A3 et A4 sont les centrales
-// Si A_X > 0 Il y a un ligne noire
+bool last_Value = true;
+
 // 0 : Blanc
 // 1 : Noir
-// 8  7  6  5  4  3  2  1
-// A7 A6 A5 A4 A3 A2 A1 A0
 // true : tourne a droite
 // false : trourne a gauche
-/////////////////////////////////////////////////////////
+
 void suiveurLigneV2(bool active)
 {
     int A_X[8] = {0};
@@ -36,10 +32,12 @@ void suiveurLigneV2(bool active)
         {
             MOTOR_SetSpeed(LEFT, .15);
             MOTOR_SetSpeed(RIGHT, .25);
+            last_Value = true;
         }
         else if (A_X[2])
         {
             MOTOR_SetSpeed(LEFT, .15);
+            last_Value = true;
         }
         else if (A_X[3])
         {
@@ -54,26 +52,29 @@ void suiveurLigneV2(bool active)
         else if (A_X[5])
         {
             MOTOR_SetSpeed(RIGHT, .15);
+            last_Value = false;
         }
         else if (A_X[6])
         {
             MOTOR_SetSpeed(RIGHT, .15);
             MOTOR_SetSpeed(LEFT, .25);
+            last_Value = false;
         }
         else if (A_X[7])
         {
             MOTOR_SetSpeed(RIGHT, -.15);
             MOTOR_SetSpeed(LEFT, .25);
+            last_Value = false;
         }
-        else if (last_Value) //Cherche un ligne
+        else if (!last_Value)
+        {
+            MOTOR_SetSpeed(RIGHT, -.25);
+            MOTOR_SetSpeed(LEFT, .25);
+        }
+        else if (last_Value) //Cherche une ligne
         {
             MOTOR_SetSpeed(LEFT, -.25);
             MOTOR_SetSpeed(RIGHT, .25);
-        }
-        else
-        {
-            MOTOR_SetSpeed(RIGHT, -0.25);
-            MOTOR_SetSpeed(LEFT, .25);
         }
     }
 }

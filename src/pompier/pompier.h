@@ -1,9 +1,7 @@
 #include <flameSensor/flameSensor.h>
-#include <infraRouge/lecteurInfraRouge.h>
 #include <suiveurLigne/suiveurLignesV2.h>
 #include <Arduino.h>
 #include <LED/LED.h>
-
 
 #define allumer 1
 #define etteind 0
@@ -34,44 +32,14 @@ bool timerPompier(long maxTimer)
     return value;
 }
 
-void pompier(int outputPin)
+void buzzer(boolean buzzerOn)
 {
-    int read = InfraRougeValue();
-    boolean droit = detectFlame(flameDroit);
-    boolean gauche = detectFlame(flameGauche);
-    boolean centre = detectFlame(flameCentre);
-
-    // suiveurLigneV2(ON);
-
-    if (droit)
+    if (buzzerOn)
     {
-        LED(allumer);
-        AX_BuzzerON(220, 250);
-        MOTOR_SetSpeed(RIGHT, 0);
-        MOTOR_SetSpeed(LEFT, .30);
-        if (flameCentre)
-        {
-            MOTOR_SetSpeed(RIGHT, 0.20);
-            MOTOR_SetSpeed(LEFT, 0.20);
-        }
-        delay(100);
-    }
-
-    if ((read > 250 && read < 500) && droit)
-    {
-        Serial.println("Lancer de l'eau!");
-        digitalWrite(outputPin, HIGH); // on
-        LED(allumer);
-        AX_BuzzerON(220, 250);
-        delay(100);
-    }
-    else
-    {
-        Serial.println("pas d'eau!");
-        digitalWrite(outputPin, LOW); // off
-        LED(etteind);
-        AX_BuzzerOFF();
-        delay(100);
+        if (timerPompier(300))
+            AX_BuzzerON(220, 250);
+        else
+            AX_BuzzerOFF();
     }
 }
 
@@ -81,27 +49,35 @@ void setMotorSpeedZero()
     MOTOR_SetSpeed(LEFT, 0);
 }
 
-void trouverFlame()
+void LEDBuzzer(boolean buzzerOn)
 {
-    int read = InfraRougeValue();
+    LED(allumer);
+    buzzer(buzzerOn);
+}
+
+void trouverFlame(boolean buzzerOn)
+{
+    int read = ROBUS_ReadIR(3);
     boolean droit = detectFlame(flameDroit);
     boolean gauche = detectFlame(flameGauche);
     boolean centre = detectFlame(flameCentre);
 
     if ((droit && !centre && !gauche))
     {
-        while (!centre)
+        if (!centre)
         {
+            LEDBuzzer(buzzerOn);
             MOTOR_SetSpeed(RIGHT, 0);
-            MOTOR_SetSpeed(LEFT, .15);
+            MOTOR_SetSpeed(LEFT, .1);
             centre = detectFlame(flameCentre);
         }
     }
     if (centre || (droit && centre && gauche))
     {
-        // setMotorSpeedZero();
-        // MOTOR_SetSpeed(LEFT, 0.20);
-        if (read > 250 && read < 400)
+        LEDBuzzer(buzzerOn);
+        // MOTOR_SetSpeed(LEFT, 0.1);
+        // MOTOR_SetSpeed(RIGHT, 0.1);
+        if (read > 250 && read < 300)
         {
             setMotorSpeedZero();
             Serial.print("bonne distance");
@@ -110,16 +86,17 @@ void trouverFlame()
     }
     if (gauche && !centre && !droit)
     {
-        MOTOR_SetSpeed(RIGHT, 0.15);
-        MOTOR_SetSpeed(LEFT, 0);
-        if (centre)
+        if (!centre)
         {
-            gauche = 0;
+            LEDBuzzer(buzzerOn);
+            MOTOR_SetSpeed(RIGHT, 0.1);
+            MOTOR_SetSpeed(LEFT, 0);
+            centre = detectFlame(flameCentre);
         }
     }
 }
 
-void pompierFlame(int outputPin, bool pompeOn, bool buzzerOn)
+void pompierFlame(int pompePin, bool pompeOn, bool buzzerOn)
 {
     boolean droit = detectFlame(flameDroit);
     boolean centre = detectFlame(flameCentre);
@@ -130,39 +107,32 @@ void pompierFlame(int outputPin, bool pompeOn, bool buzzerOn)
         flame = true;
         LED(allumer);
 
-        if(buzzerOn)
-            AX_BuzzerON(220, 250);
+        buzzer(buzzerOn);
 
-        trouverFlame();
+        trouverFlame(buzzerOn);
 
         if (centre && pompeOn && motorOFF)
         {
-            pinMode(outputPin, OUTPUT);
+            pinMode(pompePin, OUTPUT);
             while (timerPompier(80))
             {
-                Serial.println("Lancer de l'eau!");
-                digitalWrite(outputPin, HIGH); // on
+                digitalWrite(pompePin, HIGH); // on
             }
         }
         else
         {
-            // Serial.println("pas d'eau!");
-            digitalWrite(outputPin, LOW); // off
+            digitalWrite(pompePin, LOW); // off
         }
     }
     else
     {
         motorOFF = false;
         suiveurLigneV2(flame);
-        // Serial.println("pas d'eau!");
-        digitalWrite(outputPin, LOW); // off
+        digitalWrite(pompePin, LOW); // off
         LED(etteind);
         AX_BuzzerOFF();
 
-        int a = timerPompier(2000);
-        // Serial.println(a);
-
-        if(a)
+        if (timerPompier(2000))
             flame = false;
     }
 }

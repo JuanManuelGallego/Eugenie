@@ -6,10 +6,12 @@ void tourner(bool direction, float angle, float vitesse, int noRobot)
     float tourComplet = 26.7;
 
     //robotB
-    if(noRobot == 1){
+    if (noRobot == 1)
+    {
         tourComplet = 28.5;
     }
-    if(noRobot == 0){
+    if (noRobot == 0)
+    {
         tourComplet = 28.5;
     }
 

@@ -9,16 +9,13 @@ int analogReadValue(int IRID)
 boolean detectFlame(int IRID)
 {
   int flame_detected = analogReadValue(IRID);
-  // Serial.println(flame_detected);
 
   if (!flame_detected)
   {
-    // Serial.println("Flame detected...! take action immediately.");
     return true;
   }
   else
   {
-    // Serial.println("No flame detected. stay cool");
     return false;
   }
 }

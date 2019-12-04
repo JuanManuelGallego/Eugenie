@@ -3,7 +3,7 @@ Projet: EuGenie
 Equipe: P-03
 Auteurs: Les membres auteurs du script
 Description: Breve description du script
-Date: Derniere date de modification
+Date: 2019-15-04
 */
 
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
@@ -13,30 +13,30 @@ Date: Derniere date de modification
 #include <parcourCombattant/parcoursCombattant.h>
 #include <pompier/pompier.h>
 
-/* ****************************************************************************
-Fonctions d'initialisation (setup)
-**************************************************************************** */
-// -> Se fait appeler au debut du programme
-// -> Se fait appeler seulement un fois
-// -> Generalement on y initilise les varibbles globales
-
+// Parcours
 #define robot3A 0
 #define robot3B 1
 #define vitesseAvancer 0.25
 #define vitesseTourner 0.25
 #define delais 200
 
+// Couleurs parcours combattant
 #define green 1
 #define red 2
 #define blue 3
 #define yellow
 
-//LED
+// LED
 #define led1 2
 #define led2 3
 
-//pompe
+// Pompe
 #define pompePin 13
+
+// btnONOFF
+#define btnONOFF 50
+
+static int ONOFF = 0;
 
 void parcourTest(int noRobot)
 {
@@ -124,12 +124,12 @@ void choixRobot(int noRobot)
 
 void setPinMode()
 {
-  // pinMode(pompePin, OUTPUT);
+  //Gyrophare
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
 
-  //Gyrophare
-  pinMode(4, OUTPUT);
+  //Btn ON/OFF
+  pinMode(btnONOFF, INPUT);
 
   // Suiveur de lignes
   pinMode(38, INPUT);
@@ -149,13 +149,24 @@ void setup()
   Serial.begin(9600);
   ENCODER_Reset(RIGHT);
   ENCODER_Reset(LEFT);
-  digitalWrite(4, LOW);
 }
 
-/* ****************************************************************************
-Fonctions de boucle infini (loop())
-**************************************************************************** */
-// -> Se fait appeler perpetuellement suite au "setup"
+void initialSetup()
+{
+  setMotorSpeedZero();
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(pompePin, LOW);
+  ENCODER_Reset(RIGHT);
+  ENCODER_Reset(LEFT);
+}
+
+int actionnerRobot()
+{
+  int powerONOFF = digitalRead(btnONOFF);
+  ONOFF = powerONOFF;
+  return powerONOFF;
+}
 
 void loop()
 {
@@ -164,16 +175,15 @@ void loop()
   //   parcoursCombattant(robot3A, yellow);
   //   // parcoursCombattant(robot3B, red);
   // }
-  // pompier(pompePin);
-  // suiveurLigneV2();
-  // digitalWrite(pompePin, HIGH); // sets the digital pin 13 on
-  // detectFlame(1);
-  // trouverFlame();
-  // digitalWrite(4, HIGH);
 
-  while (true)
+  if (ONOFF)
   {
-    pompierFlame(pompePin, true, false);
+    pompierFlame(pompePin, false, false);
+    ONOFF = actionnerRobot();
   }
-  // allumerLED();
+  else
+  {
+    initialSetup();
+    ONOFF = actionnerRobot();
+  }
 }
